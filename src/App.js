@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import AddTaskForm from "./AddTaskForm";
+import TaskList from "./TaskList";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [tasks, setTasks] = useState([]);
+
+	const addTask = (taskName) => {
+		if (taskName.trim()) {
+			setTasks([...tasks, { name: taskName, completed: false }]);
+		}
+	};
+
+	const deleteTask = (indexToDelete) => {
+		setTasks(tasks.filter((_, index) => index !== indexToDelete));
+	};
+
+	const toggleTaskCompletion = (indexToToggle) => {
+		setTasks(
+			tasks.map((task, index) =>
+				index === indexToToggle
+					? { ...task, completed: !task.completed }
+					: task
+			)
+		);
+	};
+
+	return (
+		<div className="container-task">
+			<h1>Todo List</h1>
+			<AddTaskForm addTask={addTask} />
+			<TaskList
+				tasks={tasks}
+				toggleTaskCompletion={toggleTaskCompletion}
+				deleteTask={deleteTask}
+			/>
+		</div>
+	);
 }
 
 export default App;
